@@ -1,5 +1,6 @@
 const express = require("express")
 const cors = require("cors")
+const path = require("path")
 const cookieParser = require("cookie-parser")
 const mongoose = require("mongoose")
 const { protectedRoute } = require("./middleware/protected")
@@ -10,6 +11,7 @@ const app = express()
 
 
 app.use(express.json())
+app.use(express.static(path.join(__dirname, "dist")))
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -22,7 +24,8 @@ app.use("/api/transaction", protectedRoute, require("./routes/transactionRoute")
 
 
 app.use("*", (req, res) => {
-    res.status(404).json("resource not found")
+    res.sendFile(path.join(__dirname, "dist", "index.html"))
+    // res.status(404).json("resource not found")
 })
 
 app.use((err, req, res, next) => {
